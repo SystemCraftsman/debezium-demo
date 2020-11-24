@@ -23,7 +23,7 @@ Let's say we create a namespace called `debezium-demo` by running the following 
 
 `cd the-neverending-blog`
 
-`oc start-build neverending-blog --from-dir=. `
+`oc start-build neverending-blog --from-dir=. -n debezium-demo`
 
 `helm template the-neverending-blog chart | oc apply -f - -n debezium-demo`
 
@@ -37,12 +37,12 @@ Let's say we create a namespace called `debezium-demo` by running the following 
 
 ## Deploy a Kafka Connect cluster with Strimzi Kafka CLI
 
-`oc apply -f resources/kafka-connect-debezium.yaml`
+`oc apply -f resources/kafka-connect-debezium.yaml -n debezium-demo`
 
 
 ## Deploy and configure a Debezium connector for MySQL
 
-`oc apply -f resources/kafka-connector-mysql-debezium.yaml`
+`oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo`
 
 ## See the topics:
 
