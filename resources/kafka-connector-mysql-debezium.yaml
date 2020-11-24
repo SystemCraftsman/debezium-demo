@@ -1,0 +1,19 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  labels:
+    strimzi.io/cluster: debezium
+  name: debezium-mysql-connector
+spec:
+  class: io.debezium.connector.mysql.MySqlConnector
+  config:
+    database.server.name: dbserver-mysql
+    database.hostname: mysql
+    database.user: debezium
+    database.password: dbz
+    database.server.id: '184054'
+    database.port: '3306'
+    database.whitelist: neverendingblog
+    database.history.kafka.topic: mysql.schema-changes.neverendingblog
+    database.history.kafka.bootstrap.servers: 'demo-kafka-bootstrap:9092'
+  tasksMax: 1

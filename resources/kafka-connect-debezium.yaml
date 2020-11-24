@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+  name: debezium
+spec:
+  bootstrapServers: 'demo-kafka-bootstrap:9092'
+  config:
+    config.storage.replication.factor: '1'
+    config.storage.topic: debezium-cluster-configs
+    group.id: debezium-cluster
+    offset.storage.replication.factor: '1'
+    offset.storage.topic: debezium-cluster-offsets
+    status.storage.replication.factor: '1'
+    status.storage.topic: debezium-cluster-status
+  image: 'quay.io/hguerreroo/rhi-cdc-connect:2020-Q3'
+  jvmOptions:
+    gcLoggingEnabled: false
+  replicas: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
