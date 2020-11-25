@@ -48,4 +48,13 @@ Let's say we create a namespace called `debezium-demo` by running the following 
 
 `kfk topics --list -n debezium-demo -c demo`
 
+## Observe the changes
+
+kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo
+
+
+## Apply conversion and transformation
+
+`oc apply -f resources/kafka-connector-mysql-debezium_conv.yaml -n debezium-demo`
+
 
