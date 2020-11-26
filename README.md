@@ -69,9 +69,13 @@ Let's say we create a namespace called `debezium-demo` by running the following 
 
 ### Observe transformed changes
 
+Consume the messages:
+
 `kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo`
 
+Open the browser and open Neverending Blog admin page.
 
+Add a new post like `Java Day Istanbul 2020`
 ### Deploy a Kafka Connect Cluster for Camel
 
 `oc apply -f resources/kafka-connect-camel.yaml -n debezium-demo`
@@ -92,19 +96,11 @@ curl -X GET \
   -H 'cache-control: no-cache'
 `
 
-Search for `Java` titled post changes:
+Search for `Java Day Istanbul` titled post changes:
 
 `
 curl -X GET \
-  'http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search?q=title:Java' \
+  'http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search?q=title:Javaday%20Istanbul%202020' \
   -H 'Postman-Token: b9c787ac-ce07-4060-9f61-821d110b7389' \
-  -H 'cache-control: no-cache'
-`
-Search for `CLI` titled post changes:
-
-`
-curl -X GET \
-  'http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search?q=title:CLI' \
-  -H 'Postman-Token: 6f97c8f5-a721-4126-a85a-e273dacf562d' \
   -H 'cache-control: no-cache'
 `
