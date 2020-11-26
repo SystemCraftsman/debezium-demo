@@ -8,8 +8,8 @@
 
 `sudo pip install strimzi-kafka-cli`
 
-* oc or kubectl
-* helm
+* `oc` or `kubectl`
+* `helm`
 
 Login to a Kubernetes or OpenShift cluster and create a new namespace/project
 
