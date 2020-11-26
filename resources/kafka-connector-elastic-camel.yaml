@@ -1,0 +1,18 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  labels:
+    strimzi.io/cluster: camel
+  name: elasticsearch-connector
+spec:
+  class: >-
+    org.apache.camel.kafkaconnector.elasticsearchrest.CamelElasticsearchrestSinkConnector
+  config:
+    camel.sink.endpoint.hostAddresses: 'elasticsearch-es-http:9200'
+    camel.sink.endpoint.indexName: posts
+    camel.sink.endpoint.operation: Index
+    camel.sink.path.clusterName: elasticsearch
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    topics: db.neverendingblog.posts
+  tasksMax: 1

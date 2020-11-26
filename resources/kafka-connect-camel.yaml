@@ -1,0 +1,25 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+  name: camel
+spec:
+  bootstrapServers: 'demo-kafka-bootstrap:9092'
+  config:
+    config.storage.replication.factor: '1'
+    config.storage.topic: camel-cluster-configs
+    group.id: camel-cluster
+    offset.storage.replication.factor: '1'
+    offset.storage.topic: camel-cluster-offsets
+    status.storage.replication.factor: '1'
+    status.storage.topic: camel-cluster-status
+  image: 'quay.io/hguerreroo/camel-kafka-connect:0.5.0'
+  jvmOptions:
+    gcLoggingEnabled: false
+  replicas: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
