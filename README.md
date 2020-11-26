@@ -55,6 +55,6 @@ kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo
 
 ## Apply conversion and transformation
 
-`oc apply -f resources/kafka-connector-mysql-debezium_conv.yaml -n debezium-demo`
+`oc apply -f resources/kafka-connector-mysql-debezium_transformed.yaml -n debezium-demo`
 
 
