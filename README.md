@@ -96,7 +96,7 @@ curl -X GET \
   -H 'cache-control: no-cache'
 `
 
-Search for `Java Day Istanbul` titled post changes:
+Search for `Javaday Istanbul 2020` titled post changes:
 
 `
 curl -X GET \
