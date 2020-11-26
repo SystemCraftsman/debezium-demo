@@ -75,7 +75,7 @@ Consume the messages:
 
 Open the browser and open Neverending Blog admin page.
 
-Add a new post like `Java Day Istanbul 2020`
+Add a new post titled `Javaday Istanbul 2020`
 ### Deploy a Kafka Connect Cluster for Camel
 
 `oc apply -f resources/kafka-connect-camel.yaml -n debezium-demo`
