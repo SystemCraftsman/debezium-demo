@@ -1,61 +1,61 @@
-# ASAP! – The Storyfied Demo of Debezium and Strimzi
+# ASAP! – The Storyfied Demo of Introduction to Debezium and Kafka on Kubernetes
 
-## Pre-Demo Installations
-
-### Install the prereqs:
-
-* Strimzi Kafka CLI:
-
-`sudo pip install strimzi-kafka-cli`
-
-* `oc` or `kubectl`
-* `helm`
-
-Login to a Kubernetes or OpenShift cluster and create a new namespace/project.
-
-Let's say we create a namespace called `debezium-demo` by running the following command on OpenShift:
-
-`oc new-project debezium-demo`
-
-### Install demo application 'The NeverEnding Blog'
-
-Clone the repository:
-
-`git clone https://github.com/mabulgu/the-neverending-blog.git`
-
-Checkout the `debezium-demo` branch:
-
-`git checkout debezium-demo`
-
-Go into the application directory:
-
-`cd the-neverending-blog`
-
-Install the helm template:
-
-`helm template the-neverending-blog chart | oc apply -f - -n debezium-demo`
-
-Start the s2i build for the application:
-
-`oc start-build neverending-blog --from-dir=. -n debezium-demo`
-
-...and OpenShift will take care of the rest.
-
-### Install Elasticsearch
-
-Apply Elasticsearch resources to OpenShift:
-
-`oc apply -f resources/elasticsearch.yaml -n debezium-demo`
-
-Expose the route for Elasticsearch:
-
-`oc expose svc elasticsearch-es-http -n debezium-demo`
-
-So before the demo you should be having something like this:
-
-![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
-
-So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
+> ## Pre-Demo Installations
+> 
+> ### Install the prereqs:
+> 
+> * Strimzi Kafka CLI:
+> 
+> `sudo pip install strimzi-kafka-cli`
+> 
+> * `oc` or `kubectl`
+> * `helm`
+> 
+> Login to a Kubernetes or OpenShift > cluster and create a new namespace/project.
+> 
+> Let's say we create a namespace called > `debezium-demo` by running the following > command on OpenShift:
+> 
+> `oc new-project debezium-demo`
+> 
+> ### Install demo application 'The NeverEnding Blog'
+> 
+> Clone the repository:
+> 
+> `git clone https://github.com/mabulgu/the-neverending-blog.git`
+> 
+> Checkout the `debezium-demo` branch:
+> 
+> `git checkout debezium-demo`
+> 
+> Go into the application directory:
+> 
+> `cd the-neverending-blog`
+> 
+> Install the helm template:
+> 
+> `helm template the-neverending-blog chart | oc apply -f - -n debezium-demo`
+> 
+> Start the s2i build for the application:
+> 
+> `oc start-build neverending-blog --from-dir=. -n debezium-demo`
+> 
+> ...and OpenShift will take care of the rest.
+> 
+> ### Install Elasticsearch
+> 
+> Apply Elasticsearch resources to OpenShift:
+> 
+> `oc apply -f resources/elasticsearch.yaml -n debezium-demo`
+> 
+> Expose the route for Elasticsearch:
+> 
+> `oc expose svc elasticsearch-es-http -n debezium-demo`
+> 
+> So before the demo you should be having something like this:
+> 
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
+> 
+> So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
 
 ## Demo Instructions ASAP!
 
@@ -67,9 +67,9 @@ One day your boss comes and tells you this:
 
 So getting the `command` from your boss, you think that this is a good use case for using Change Data Capture (CDC) pattern.
 
-Since the boss wants it ASAP, you have to find a way and you think it will be best to implement it via [Debezium](https://debezium.io/) on your `OpenShift Office Space` cluster along with [Strimzi: Kafka on Kubernetes](https://strimzi.io/).
+Since the boss wants it ASAP, you have to find a way to apply this request easily and you think it will be best to implement it via [Debezium](https://debezium.io/) on your `OpenShift Office Space` cluster along with [Strimzi: Kafka on Kubernetes](https://strimzi.io/).
 
-Oh and you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/office_space/quotes/) while you are doing all these even if it's not Friday:)
+Oh, you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/office_space/quotes/) while you are doing all these even if it's not Friday:)
 
 ### Deploy a Kafka cluster with Strimzi Kafka CLI
 
