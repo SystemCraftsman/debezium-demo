@@ -1,4 +1,4 @@
-# Introducing Change Data Capture with Debezium and Apache Kafka - Demo
+# ASAP! – The Storyfied Demo of Debezium and Strimzi
 
 ## Pre-Demo Installations
 
@@ -11,13 +11,13 @@
 * `oc` or `kubectl`
 * `helm`
 
-Login to a Kubernetes or OpenShift cluster and create a new namespace/project
+Login to a Kubernetes or OpenShift cluster and create a new namespace/project.
 
 Let's say we create a namespace called `debezium-demo` by running the following command on OpenShift:
 
 `oc new-project debezium-demo`
 
-### Install demo application 'The Neverending Blog'
+### Install demo application 'The NeverEnding Blog'
 
 Clone the repository:
 
@@ -53,17 +53,17 @@ Expose the route for Elasticsearch:
 
 So before the demo you should be having something like this:
 
-![](images/initial_apps.png)
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
 
 So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
 
-## Demo Instructions aka. `ASAP`
+## Demo Instructions ASAP!
 
 So you are working at a company as a `Software Person` and you are responsible for the company's blog application which runs on Django and use MYSQL as a database.
 
 One day your boss comes and tells you this:
 
-![](images/os_boss.jpg)
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/os_boss.jpg)
 
 So getting the `command` from your boss, you think that this is a good use case for using Change Data Capture (CDC) pattern.
 
