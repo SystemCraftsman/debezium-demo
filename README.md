@@ -1,6 +1,6 @@
-# Debezium Demo
+# Introducing Change Data Capture with Debezium and Apache Kafka - Demo
 
-## Pre Demo Installations
+## Pre-Demo Installations
 
 ### Install the prereqs:
 
@@ -17,25 +17,59 @@ Let's say we create a namespace called `debezium-demo` by running the following 
 
 `oc new-project debezium-demo`
 
-### Install demo app
+### Install demo application `The Neverending Blog`
+
+Clone the repository:
 
 `git clone https://github.com/mabulgu/the-neverending-blog.git`
 
+Checkout the `debezium-demo` branch:
+
 `git checkout debezium-demo`
+
+Go into the application directory:
 
 `cd the-neverending-blog`
 
+Install the helm template:
+
 `helm template the-neverending-blog chart | oc apply -f - -n debezium-demo`
+
+Start the s2i build for the application:
 
 `oc start-build neverending-blog --from-dir=. -n debezium-demo`
 
+...and OpenShift will take care of the rest.
+
 ### Install Elasticsearch
 
-`oc apply -f resources/elasticsearch.yaml`
+Apply Elasticsearch resources to OpenShift:
 
-`oc expose svc elasticsearch-es-http`
+`oc apply -f resources/elasticsearch.yaml -n debezium-demo`
 
-## Demo Time!
+Expose the route for Elasticsearch:
+
+`oc expose svc elasticsearch-es-http -n debezium-demo`
+
+So before the demo you should be having something like this:
+
+![](images/initial_apps.png)
+
+So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
+
+## Demo Instructions aka. `The Request`
+
+So you are working at a company as a `Software Person` and you are responsible for the company's blog application which runs on Django and use MYSQL as a database.
+
+One day your boss comes and tells you this:
+
+![](images/os_boss.jpg)
+
+So getting the `command` from your boss, you think that this is a good use case for using Change Data Capture (CDC) pattern.
+
+Since the boss wants it ASAP, you have to find a way and you think it will be best to implement it via [Debezium](https://debezium.io/) on your `OpenShift Office Space` cluster along with [Strimzi: Kafka on Kubernetes](https://strimzi.io/).
+
+Oh and you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/office_space/quotes/) while you are doing all these even if it's not Friday:)
 
 ### Deploy a Kafka cluster with Strimzi Kafka CLI
 
