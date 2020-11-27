@@ -57,7 +57,7 @@
 >
 > ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elasticsearch.png)
 > 
-> So before the demo you should be having something like this:
+> And for the overall applications before the demo you should be having something like this:
 > 
 > ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
 > 
