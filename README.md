@@ -17,7 +17,7 @@ Let's say we create a namespace called `debezium-demo` by running the following 
 
 `oc new-project debezium-demo`
 
-### Install demo application `The Neverending Blog`
+### Install demo application 'The Neverending Blog'
 
 Clone the repository:
 
@@ -57,7 +57,7 @@ So before the demo you should be having something like this:
 
 So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
 
-## Demo Instructions aka. `The Request`
+## Demo Instructions aka. `ASAP`
 
 So you are working at a company as a `Software Person` and you are responsible for the company's blog application which runs on Django and use MYSQL as a database.
 
