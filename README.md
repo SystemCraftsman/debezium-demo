@@ -55,11 +55,11 @@
 >
 > By clicking on the `route` of the application in the browser you should see a page like this:
 >
-> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/blog.png)
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elastic.png)
 > 
 > So before the demo you should be having something like this:
 > 
-> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elastic.png)
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
 > 
 > So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
 
