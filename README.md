@@ -39,7 +39,9 @@
 > 
 > `oc start-build neverending-blog --from-dir=. -n debezium-demo`
 > 
-> ...and OpenShift will take care of the rest.
+> ...and OpenShift will take care of the rest and you should have a blog application called 'The NeverEnding Blog' in the end:
+> 
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/blog.png)
 > 
 > ### Install Elasticsearch
 > 
@@ -50,10 +52,14 @@
 > Expose the route for Elasticsearch:
 > 
 > `oc expose svc elasticsearch-es-http -n debezium-demo`
+>
+> By clicking on the `route` of the application in the browser you should see a page like this:
+>
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/blog.png)
 > 
 > So before the demo you should be having something like this:
 > 
-> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elastic.png)
 > 
 > So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
 
