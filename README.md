@@ -55,7 +55,7 @@
 >
 > By clicking on the `route` of the application in the browser you should see a page like this:
 >
-> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elastic.png)
+> ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elasticsearch.png)
 > 
 > So before the demo you should be having something like this:
 > 
