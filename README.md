@@ -187,7 +187,9 @@ Apply this YAML by saving it or just run the following command in this repositor
 oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo
 ```
 
-So you should now have some `action` in your Kafka cluster by now.
+So you should now have some `action` in your Kafka cluster by now and the big picture should look like this:
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/connector_mysql_to_kafka.png)
 
 In order to see if there is any new topic is created in your Kafka cluster run this command to list the topics in the `debezium-demo` namespace and `demo` Kafka cluster:
 
@@ -228,7 +230,7 @@ After starting the consumer let's make some changes in the `NeverEnding Blog`. O
 You can get the route URL of your application with the following command:
 
 ```shell
-oc get routes
+oc get routes -n debezium-demo
 ```
 ---
 
@@ -482,8 +484,6 @@ In the consumer you must already have seen a move right? Copy that into a JSON b
 
 So congratulations! You can capture changes on your `neverendingblog` database. 
 
-![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/connector_mysql_to_kafka.png)
-
 But your boss still wants you to put these changes on your search system `Elasticsearch`. 
 
 
@@ -580,27 +580,113 @@ This will create a Kafka Connect cluster with the name `camel` on your namespace
 
 ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/camel_connect.png)
 
+Now let's put some connector on this connect cluster.
+
 ### Deploy a Camel Sink connector for Elasticsearch
 
-`oc apply -f resources/kafka-connector-elastic-camel.yaml -n debezium-demo`
+In order to send the consumed data to Elasticsearch we can use [Apache Camel](https://camel.apache.org/) project's connectors for Kafka Connect.
 
+The following is a sample of an Elasticsearch Sink Connector of Camel, which takes Kafka as `the source` and Elasticsearch as `the sink`.
 
-### Let's test Elasticsearch
+```yaml
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  labels:
+    strimzi.io/cluster: camel
+  name: elasticsearch-connector
+spec:
+  class: >-
+    org.apache.camel.kafkaconnector.elasticsearchrest.CamelElasticsearchrestSinkConnector
+  config:
+    camel.sink.endpoint.hostAddresses: 'elasticsearch-es-http:9200'
+    camel.sink.endpoint.indexName: posts
+    camel.sink.endpoint.operation: Index
+    camel.sink.path.clusterName: elasticsearch
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    topics: db.neverendingblog.posts
+  tasksMax: 1
+```
 
-Get posts index:
+By saving and applying this resource you tell the connect cluster that consume the `db.neverendingblog.posts` topic of Kafka, and put them in a `posts` index in Elasticsearch.
 
-`
+Or just run this command to create the connector:
+
+```shell
+oc apply -f resources/kafka-connector-elastic-camel.yaml -n debezium-demo
+```
+
+Now the big picture should look like this:
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/connector_kafka_to_camel_to_elastic.png)
+
+So let's test your Elasticsearch running some `curl`s as a `search` request.
+### Try out Elasticsearch
+
+For Elasticsearch, just like other applications in OpenShift in order to access it externally, you should get its route with the command:
+
+```shell
+oc get routes -n debezium-demo
+```
+
+Let's say that we get the route as `http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com`.
+
+So in order to see if the index is created or if it has anything inside, just run the following command for searching everything in the index:
+
+```shell
 curl -X GET \
-  http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search \
-  -H 'Postman-Token: 03ff72a2-84bc-4323-b863-c66ddd1cbf5c' \
-  -H 'cache-control: no-cache'
-`
+  http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search
+```
 
-Search for `Javaday Istanbul 2020` titled post changes:
+You should get a response that has all the changes including the one for `Javaday Istanbul`. So let's see if we can find it or not:
 
-`
+```shell
 curl -X GET \
-  'http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search?q=title:Javaday%20Istanbul%202020' \
-  -H 'Postman-Token: b9c787ac-ce07-4060-9f61-821d110b7389' \
-  -H 'cache-control: no-cache'
-`
+  'http://elasticsearch-es-http-debezium-demo.apps.cluster-jdayist-6d29.jdayist-6d29.example.opentlc.com/posts/_search?q=title:Javaday%20Istanbul%202020'
+```
+
+So you should see somethinhg like this in return:
+
+```json
+{
+    "took": 8,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+    },
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 4.852654,
+        "hits": [
+            {
+                "_index": "posts",
+                "_type": "_doc",
+                "_id": "8VI-FnYBP8VChxowl2Pr",
+                "_score": 4.852654,
+                "_source": {
+                    "id": 3,
+                    "title": "Javaday Istanbul 2020",
+                    "text": "It was perfect as always!",
+                    "created_date": 1606690949000000,
+                    "published_date": null,
+                    "author_id": 1,
+                    "__op": "c",
+                    "__table": "posts"
+                }
+            }
+        ]
+    }
+}
+```
+
+Congratulations! You finished it ASAP! Now you can relax and may feel a little bit like a gansta:)
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/os_peter_gansta.gif)
+
