@@ -480,7 +480,12 @@ In the consumer you must already have seen a move right? Copy that into a JSON b
 }
 ```
 
-So congratulations! You can capture changes on your `neverendingblog` database. But your boss still wants you to put these changes on your search system `Elasticsearch`. 
+So congratulations! You can capture changes on your `neverendingblog` database. 
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/connector_mysql_to_kafka.png)
+
+But your boss still wants you to put these changes on your search system `Elasticsearch`. 
+
 
 Before rolling the sleeves to send this change data to Elasticsearch let's purify this data since all you need to index is the `operation type` and the table fields in this Debezium JSON data.
 ### Simple Data Transformation
