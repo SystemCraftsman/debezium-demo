@@ -65,7 +65,7 @@
 
 ## ASAP!
 
-So you are working at a company as a `Software Person` and you are responsible for the company's blog application which runs on Django and use MYSQL as a database.
+So you are working at a company called `NeverEnding Inc.` as a `Software Person` and you are responsible for the company's blog application which runs on Django and use MYSQL as a database.
 
 One day your boss comes and tells you this:
 
@@ -108,7 +108,7 @@ In the opened editor you may choose 3 broker, 3 zookeeper configuration which is
 
 ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/strimzi_kafka_cluster.png)
 
-### Deploy a Kafka Connect for Debezium
+### Kafka Connect for Debezium
 
 Now it's time to create a Kafka Connect cluster via using Strimzi custom resources. Since Strimzi Kafka CLI is not capable of creating connect objects yet at the time of writing this article we will create it by using the sample resources in the demo project.
 
@@ -214,25 +214,326 @@ debezium-cluster-offsets                                                        
 debezium-cluster-status                                                             5            1
 ```
 
-### Observe the changes
+Now let's check this connector works or not. So start a consumer that listens your `db.neverendingblog.posts` topic which the captured data from `posts` topic is put.
+
+```shell
+kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo
+```
+
+After starting the consumer let's make some changes in the `NeverEnding Blog`. Open the Django admin page by getting the route URL of the blog and putting  a "/admin" at the end.
+
+---
+**INFO**
+
+You can get the route URL of your application with the following command:
+
+```shell
+oc get routes
+```
+---
+
+So login to the admin page with the credentials `mabulgu/123456` and click on `Posts` and add a new one by clicking `Add Post` and put these values as a test and save it:
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/blog_add_post.png)
+
+In the consumer you must already have seen a move right? Copy that into a JSON beautifier and see what you have. You must have something like this:
+
+```json
+{
+  "schema": {
+    "type": "struct",
+    "fields": [
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "int32",
+            "optional": false,
+            "field": "id"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "title"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "text"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "created_date"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "published_date"
+          },
+          {
+            "type": "int32",
+            "optional": false,
+            "field": "author_id"
+          }
+        ],
+        "optional": true,
+        "name": "db.neverendingblog.posts.Value",
+        "field": "before"
+      },
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "int32",
+            "optional": false,
+            "field": "id"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "title"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "text"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "created_date"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "published_date"
+          },
+          {
+            "type": "int32",
+            "optional": false,
+            "field": "author_id"
+          }
+        ],
+        "optional": true,
+        "name": "db.neverendingblog.posts.Value",
+        "field": "after"
+      },
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "string",
+            "optional": false,
+            "field": "version"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "connector"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "name"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "ts_ms"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "name": "io.debezium.data.Enum",
+            "version": 1,
+            "parameters": {
+              "allowed": "true,last,false"
+            },
+            "default": "false",
+            "field": "snapshot"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "db"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "table"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "server_id"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "gtid"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "file"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "pos"
+          },
+          {
+            "type": "int32",
+            "optional": false,
+            "field": "row"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "field": "thread"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "query"
+          }
+        ],
+        "optional": false,
+        "name": "io.debezium.connector.mysql.Source",
+        "field": "source"
+      },
+      {
+        "type": "string",
+        "optional": false,
+        "field": "op"
+      },
+      {
+        "type": "int64",
+        "optional": true,
+        "field": "ts_ms"
+      },
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "string",
+            "optional": false,
+            "field": "id"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "total_order"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "data_collection_order"
+          }
+        ],
+        "optional": true,
+        "field": "transaction"
+      }
+    ],
+    "optional": false,
+    "name": "db.neverendingblog.posts.Envelope"
+  },
+  "payload": {
+    "before": null,
+    "after": {
+      "id": 3,
+      "title": "Javaday Istanbul 2020",
+      "text": "It was perfect as always!",
+      "created_date": 1606400139000000,
+      "published_date": null,
+      "author_id": 1
+    },
+    "source": {
+      "version": "1.2.4.Final-redhat-00001",
+      "connector": "mysql",
+      "name": "db",
+      "ts_ms": 1606400180000,
+      "snapshot": "false",
+      "db": "neverendingblog",
+      "table": "posts",
+      "server_id": 223344,
+      "gtid": null,
+      "file": "mysql-bin.000003",
+      "pos": 27078,
+      "row": 0,
+      "thread": 221,
+      "query": null
+    },
+    "op": "c",
+    "ts_ms": 1606400180703,
+    "transaction": null
+  }
+}
+```
+
+So congratulations! You can capture changes on your `neverendingblog` database. But your boss still wants you to put these changes on your search system `Elasticsearch`. 
+
+Before rolling the sleeves to send this change data to Elasticsearch let's purify this data since all you need to index is the `operation type` and the table fields in this Debezium JSON data.
+### Simple Data Transformation
+
+So in order to transform the data some key/value converters has to be set in order to do `extract` transformation which will create a different data model in the end.
+
+So add these lines and apply it on your OpenShift cluster:
+
+```yaml
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: 'false'
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: 'false'
+    transforms: extract
+    transforms.extract.add.fields: 'op,table'
+    transforms.extract.type: io.debezium.transforms.ExtractNewRecordState
+```
+
+Or just run this sample in the repository:
+
+```shell
+oc apply -f resources/kafka-connector-mysql-debezium_transformed.yaml -n debezium-demo
+```
+
+This means that we will extract the data for `op` and `table` fields and create a new JSON to be returned.
+
+After applying the changes let's consume the messages again if we did stop the consumer already:
 
 `kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo`
 
+Go to the blog admin page again but this time let's change one of the blog posts instead of adding one.
 
-### Apply conversion and transformation
+Edit the post titled `Strimzi Kafka CLI: Managing Strimzi in a Kafka Native Way` and put a "CHANGED -" at the very start of the body for example.
 
-`oc apply -f resources/kafka-connector-mysql-debezium_transformed.yaml -n debezium-demo`
+So when you change the data, a relatively smaller JSON data must have been consumed in your console, something like this:
 
-### Observe transformed changes
+```json
+{
+  "id": 2,
+  "title": "Strimzi Kafka CLI: Managing Strimzi in a Kafka Native Way",
+  "text": "CHANGED - Strimzi Kafka CLI is a CLI that helps traditional Apache Kafka users -mostly administrators- to easily adapt Strimzi, a Kubernetes operator for Apache Kafka.\r\n\r\nIntention here is to ramp up Strimzi usage by creating a similar CLI experience with traditional Apache Kafka binaries. \r\n\r\nkfk command stands for the usual kafka-* prefix of the Apache Kafka runnable files which are located in bin directory. There are options provided like topics, console-consumer, etc. which also mostly stand for the rest of the runnable file names like kafka-topic.sh.\r\n\r\nHowever, because of the nature of Strimzi and its capabilities, there are also unusual options like clusters which is used for cluster configuration or users which is used for user management and configuration.",
+  "created_date": 1594644431000000,
+  "published_date": 1594644489000000,
+  "author_id": 1,
+  "__op": "u",
+  "__table": "posts"
+}
 
-Consume the messages:
+```
 
-`kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo`
+So this will be the data that you will index in Elasticsearch. Now let's go for it!
 
-Open the browser and open Neverending Blog admin page.
-
-Add a new post titled `Javaday Istanbul 2020`
-### Deploy a Kafka Connect Cluster for Camel
+### Kafka Connect for Camel
 
 `oc apply -f resources/kafka-connect-camel.yaml -n debezium-demo`
 
