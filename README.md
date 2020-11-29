@@ -110,7 +110,7 @@ In the opened editor you may choose 3 broker, 3 zookeeper configuration which is
 
 ### Deploy a Kafka Connect for Debezium
 
-Now it's time to create a Kafka Connect cluster via using Strimzi custom resources.Since Strimzi Kafka CLI is not capable of creating connect objects yet at the time of writing this article we will create it by using the sample resources in the demo project.
+Now it's time to create a Kafka Connect cluster via using Strimzi custom resources. Since Strimzi Kafka CLI is not capable of creating connect objects yet at the time of writing this article we will create it by using the sample resources in the demo project.
 
 Create a custom resource like the following:
 
@@ -187,9 +187,7 @@ Apply this YAML by saving it or just run the following command in this repositor
 oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo
 ```
 
-So you should now have some `movement` in your Kafka cluster.
-
-### See the topics:
+So you should now have some `action` in your Kafka cluster by now.
 
 In order to see if there is any new topic is created in your Kafka cluster run this command to list the topics in the `debezium-demo` namespace and `demo` Kafka cluster:
 
