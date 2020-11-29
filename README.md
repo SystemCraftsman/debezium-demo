@@ -77,7 +77,7 @@ Since the boss wants it ASAP, you have to find a way to apply this request easil
 
 Oh, you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/office_space/quotes/) while you are doing all these even if it's not Friday:)
 
-### Deploy a Kafka cluster with Strimzi Kafka CLI
+### Deploying a Kafka cluster with Strimzi Kafka CLI
 
 In order to install Strimzi cluster on OpenShift you decide to use use [Strimzi Kafka CLI](https://github.com/systemcraftsman/strimzi-kafka-cli) which you can also install the operator of it.
 
@@ -141,7 +141,7 @@ spec:
     requests:
       memory: 2Gi
 ```
-And apply it to OpenShift `debezioum-demo` namespace (or just apply the one you have in this demo repository)
+And apply it to OpenShift `debezium-demo` namespace (or just apply the one you have in this demo repository)
 
 ```shell
 oc apply -f resources/kafka-connect-debezium.yaml -n debezium-demo
@@ -515,7 +515,7 @@ Go to the blog admin page again but this time let's change one of the blog posts
 
 Edit the post titled `Strimzi Kafka CLI: Managing Strimzi in a Kafka Native Way` and put a "CHANGED -" at the very start of the body for example.
 
-So when you change the data, a relatively smaller JSON data must have been consumed in your console, something like this:
+When you change the data, a relatively smaller JSON data must have been consumed in your console, something like this:
 
 ```json
 {
@@ -535,7 +535,45 @@ So this will be the data that you will index in Elasticsearch. Now let's go for 
 
 ### Deploying a Kafka Connect Cluster for Camel
 
-`oc apply -f resources/kafka-connect-camel.yaml -n debezium-demo`
+In order to use another connector that consumes the data from Kafka and puts it onto Elasticsearch, first we need another Kafka Connect cluster, this time for a Camel connector.
+
+```yaml
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+  name: camel
+spec:
+  bootstrapServers: 'demo-kafka-bootstrap:9092'
+  config:
+    config.storage.replication.factor: '1'
+    config.storage.topic: camel-cluster-configs
+    group.id: camel-cluster
+    offset.storage.replication.factor: '1'
+    offset.storage.topic: camel-cluster-offsets
+    status.storage.replication.factor: '1'
+    status.storage.topic: camel-cluster-status
+  image: 'quay.io/hguerreroo/camel-kafka-connect:0.5.0'
+  jvmOptions:
+    gcLoggingEnabled: false
+  replicas: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+```
+
+Saving or apply this YAML to your OpenShift namespace or just simply run this sample:
+
+```shell
+oc apply -f resources/kafka-connect-camel.yaml -n debezium-demo
+```
+
+This will create a Kafka Connect cluster with the name `camel` on your namespace:
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/camel_connect.png)
 
 ### Deploy a Camel Sink connector for Elasticsearch
 
