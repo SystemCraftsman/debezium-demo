@@ -63,7 +63,7 @@
 > 
 > So you should have a Django application which uses a MySQL database and an Elasticsearch that has no data connection to the application -yet:)
 
-## Demo Instructions ASAP!
+## ASAP!
 
 So you are working at a company as a `Software Person` and you are responsible for the company's blog application which runs on Django and use MYSQL as a database.
 
