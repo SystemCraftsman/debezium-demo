@@ -57,7 +57,7 @@
 >
 > ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/elasticsearch.png)
 > 
-> And for the overall applications before the demo you should be having something like this:
+> And for the overall applications before the demo you should be having something like this (OpenShift Developer Perspective is used here):
 > 
 > ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/initial_apps.png)
 > 
@@ -79,18 +79,99 @@ Oh, you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/o
 
 ### Deploy a Kafka cluster with Strimzi Kafka CLI
 
+In order to install Strimzi cluster on OpenShift you decide to use use [Strimzi Kafka CLI](https://github.com/systemcraftsman/strimzi-kafka-cli) which you can also install the operator of it.
+
+First install the Strimzi operator:
+
+`kfk operator --install -n debezium-demo`
+
+---
+**IMPORTANT**
+
+If you have already an operator installed, please check the version. If the Strimzi version you've been using is older than 0.20.0, you have to set the right version as an environment variable, so that you will be able to use the right version of cluster custom resource. 
+
 `export STRIMZI_KAFKA_CLI_STRIMZI_VERSION=0.19.0`
+
+---
+
+Let's create a Kafka cluster called `demo` on our OpenShift namespace `debezium-demo`. 
 
 `kfk clusters --create --cluster demo -n debezium-demo`
 
-`unset STRIMZI_KAFKA_CLI_STRIMZI_VERSION`
+In the opened editor you may choose 3 broker, 3 zookeeper configuration which is the default. So after saving the configuration file of the Kafka cluster in the developer preview of OpenShift you should see the resources that are created for the Kafka cluster:
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/strimzi_kafka_cluster.png)
 
 ### Deploy a Kafka Connect for Debezium
 
+Now it's time to create a Kafka Connect cluster via using Strimzi custom resources.Since Strimzi Kafka CLI is not capable of creating connect objects yet at the time of writing this article we will create it by using the sample resources in the demo project.
+
+Create a custom resource like the following:
+
+`
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaConnect
+metadata:
+  annotations:
+    strimzi.io/use-connector-resources: 'true'
+  name: debezium
+spec:
+  bootstrapServers: 'demo-kafka-bootstrap:9092'
+  config:
+    config.storage.replication.factor: '1'
+    config.storage.topic: debezium-cluster-configs
+    group.id: debezium-cluster
+    offset.storage.replication.factor: '1'
+    offset.storage.topic: debezium-cluster-offsets
+    status.storage.replication.factor: '1'
+    status.storage.topic: debezium-cluster-status
+  image: 'quay.io/hguerreroo/rhi-cdc-connect:2020-Q3'
+  jvmOptions:
+    gcLoggingEnabled: false
+  replicas: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 2Gi
+`
+And apply it to OpenShift `debezioum-demo` namespace (or just apply the one you have in this demo repository)
+
 `oc apply -f resources/kafka-connect-debezium.yaml -n debezium-demo`
 
+This will create a Kafka Connect cluster with the name `debezium` on your namespace:
+
+![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/debezium_connect.png)
 
 ### Deploy a Debezium connector for MySQL
+
+So you have the Kafka Connect cluster to be able to use with Debezium. Now it's time for the real magic; the Debezium connector for MySQL.
+
+Create the custom resource like the following, by noticing the parts of configuration starts with `database`. 
+
+Since you have to capture the changes in the `neverendingblog` database which has the `posts` database your configuration should be something like this:
+
+`
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  labels:
+    strimzi.io/cluster: debezium
+  name: debezium-mysql-connector
+spec:
+  class: io.debezium.connector.mysql.MySqlConnector
+  config:
+    database.server.name: db
+    database.hostname: mysql
+    database.user: debezium
+    database.password: dbz
+    database.server.id: '184054'
+    database.port: '3306'
+    database.dbname: neverendingblog
+    database.history.kafka.topic: db.history
+    database.history.kafka.bootstrap.servers: 'demo-kafka-bootstrap:9092'
+  tasksMax: 1
+` 
 
 `oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo`
 
