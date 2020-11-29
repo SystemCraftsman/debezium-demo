@@ -108,7 +108,7 @@ In the opened editor you may choose 3 broker, 3 zookeeper configuration which is
 
 ![](https://github.com/systemcraftsman/debezium-demo/blob/main/images/strimzi_kafka_cluster.png)
 
-### Kafka Connect for Debezium
+### Deploying a Kafka Connect Cluster for Debezium
 
 Now it's time to create a Kafka Connect cluster via using Strimzi custom resources. Since Strimzi Kafka CLI is not capable of creating connect objects yet at the time of writing this article we will create it by using the sample resources in the demo project.
 
@@ -533,7 +533,7 @@ So when you change the data, a relatively smaller JSON data must have been consu
 
 So this will be the data that you will index in Elasticsearch. Now let's go for it!
 
-### Kafka Connect for Camel
+### Deploying a Kafka Connect Cluster for Camel
 
 `oc apply -f resources/kafka-connect-camel.yaml -n debezium-demo`
 
