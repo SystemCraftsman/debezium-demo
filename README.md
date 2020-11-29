@@ -83,20 +83,26 @@ In order to install Strimzi cluster on OpenShift you decide to use use [Strimzi 
 
 First install the Strimzi operator:
 
-`kfk operator --install -n debezium-demo`
+```shell
+kfk operator --install -n debezium-demo
+```
 
 ---
 **IMPORTANT**
 
 If you have already an operator installed, please check the version. If the Strimzi version you've been using is older than 0.20.0, you have to set the right version as an environment variable, so that you will be able to use the right version of cluster custom resource. 
 
-`export STRIMZI_KAFKA_CLI_STRIMZI_VERSION=0.19.0`
+```shell
+export STRIMZI_KAFKA_CLI_STRIMZI_VERSION=0.19.0
+```
 
 ---
 
 Let's create a Kafka cluster called `demo` on our OpenShift namespace `debezium-demo`. 
 
-`kfk clusters --create --cluster demo -n debezium-demo`
+```shell
+kfk clusters --create --cluster demo -n debezium-demo
+```
 
 In the opened editor you may choose 3 broker, 3 zookeeper configuration which is the default. So after saving the configuration file of the Kafka cluster in the developer preview of OpenShift you should see the resources that are created for the Kafka cluster:
 
@@ -108,7 +114,7 @@ Now it's time to create a Kafka Connect cluster via using Strimzi custom resourc
 
 Create a custom resource like the following:
 
-`
+```yaml
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaConnect
 metadata:
@@ -134,10 +140,12 @@ spec:
       memory: 2Gi
     requests:
       memory: 2Gi
-`
+```
 And apply it to OpenShift `debezioum-demo` namespace (or just apply the one you have in this demo repository)
 
-`oc apply -f resources/kafka-connect-debezium.yaml -n debezium-demo`
+```shell
+oc apply -f resources/kafka-connect-debezium.yaml -n debezium-demo
+```
 
 This will create a Kafka Connect cluster with the name `debezium` on your namespace:
 
@@ -151,7 +159,7 @@ Create the custom resource like the following, by noticing the parts of configur
 
 Since you have to capture the changes in the `neverendingblog` database which has the `posts` database your configuration should be something like this:
 
-`
+```yaml
 apiVersion: kafka.strimzi.io/v1alpha1
 kind: KafkaConnector
 metadata:
@@ -171,9 +179,11 @@ spec:
     database.history.kafka.topic: db.history
     database.history.kafka.bootstrap.servers: 'demo-kafka-bootstrap:9092'
   tasksMax: 1
-` 
+```
 
-`oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo`
+```shell
+oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo
+```
 
 ### See the topics:
 
