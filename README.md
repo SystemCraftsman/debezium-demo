@@ -181,13 +181,40 @@ spec:
   tasksMax: 1
 ```
 
+Apply this YAML by saving it or just run the following command in this repository:
+
 ```shell
 oc apply -f resources/kafka-connector-mysql-debezium.yaml -n debezium-demo
 ```
 
+So you should now have some `movement` in your Kafka cluster.
+
 ### See the topics:
 
-`kfk topics --list -n debezium-demo -c demo`
+In order to see if there is any new topic is created in your Kafka cluster run this command to list the topics in the `debezium-demo` namespace and `demo` Kafka cluster:
+
+```shell
+kfk topics --list -n debezium-demo -c demo
+```
+
+So you should see some topics are created for you:
+
+```
+NAME                                                                                PARTITIONS   REPLICATION FACTOR
+consumer-offsets---84e7a678d08f4bd226872e5cdd4eb527fadc1c6a                         50           1
+db                                                                                  1            1
+db.history                                                                          1            1
+db.neverendingblog.auth-permission---68ff3df4ec8e6a44b01288a87974b27990a559d2       1            1
+db.neverendingblog.auth-user---a76d163ac9b98b60f06bfda76e966523ee9ffad              1            1
+db.neverendingblog.django-admin-log---889a02bc079f08f8adf60c1b1f1cc6782dd99531      1            1
+db.neverendingblog.django-content-type---79cc865eac5ac5b439174d2165a8035d52062610   1            1
+db.neverendingblog.django-migrations---adc510d5c63e7b6ccbbf460dfa8c03408559591d     1            1
+db.neverendingblog.django-session---38f5de04ea83f7a9add8be00a2d695a9503505c6        1            1
+db.neverendingblog.posts                                                            1            1
+debezium-cluster-configs                                                            1            1
+debezium-cluster-offsets                                                            25           1
+debezium-cluster-status                                                             5            1
+```
 
 ### Observe the changes
 
