@@ -514,7 +514,9 @@ This means that we will extract the data for `op` and `table` fields and create 
 
 After applying the changes let's consume the messages again if we did stop the consumer already:
 
-`kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo`
+```shell
+kfk console-consumer --topic db.neverendingblog.posts -n debezium-demo -c demo
+```
 
 Go to the blog admin page again but this time let's change one of the blog posts instead of adding one.
 
