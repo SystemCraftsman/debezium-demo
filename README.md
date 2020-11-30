@@ -73,7 +73,7 @@ One day your boss comes and tells you this:
 
 So getting the `command` from your boss, you think that this is a good use case for using Change Data Capture (CDC) pattern.
 
-Since the boss wants it ASAP, you have to find a way to apply this request easily and you think it will be best to implement it via [Debezium](https://debezium.io/) on your `OpenShift Office Space` cluster along with [Strimzi: Kafka on Kubernetes](https://strimzi.io/).
+Since the boss wants it ASAP, and you don't want to [make dual writes](https://speakerdeck.com/mabulgu/introducing-change-data-capture-with-debezium-and-apache-kafka?slide=7) which may cause consistency problems, you have to find a way to apply this request easily and you think it will be best to implement it via [Debezium](https://debezium.io/) on your `OpenShift Office Space` cluster along with [Strimzi: Kafka on Kubernetes](https://strimzi.io/).
 
 Oh, you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/office_space/quotes/) while you are doing all these even if it's not Friday:)
 
