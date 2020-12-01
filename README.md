@@ -79,7 +79,7 @@ Oh, you can wear a [Hawaiian shirt and jeans](https://www.rottentomatoes.com/m/o
 
 ### Deploying a Kafka cluster with Strimzi Kafka CLI
 
-In order to install Strimzi cluster on OpenShift you decide to use use [Strimzi Kafka CLI](https://github.com/systemcraftsman/strimzi-kafka-cli) which you can also install the operator of it.
+In order to install Strimzi cluster on OpenShift you decide to use [Strimzi Kafka CLI](https://github.com/systemcraftsman/strimzi-kafka-cli) which you can also install the cluster operator of it.
 
 First install the Strimzi operator:
 
