@@ -1,6 +1,6 @@
 # ASAP! – The Storyfied Demo of Introduction to Debezium and Kafka on Kubernetes
 
-> ## Pre-Demo Installations
+> ## Pre-Demo Preparations
 > 
 > ### Install the prereqs:
 > 
