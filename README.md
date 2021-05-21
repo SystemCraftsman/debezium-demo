@@ -11,7 +11,7 @@
 > * `oc` or `kubectl`
 > * `helm`
 > 
-> Login to a Kubernetes or OpenShift > cluster and create a new namespace/project.
+> Login to a Kubernetes or OpenShift cluster and create a new namespace/project.
 > 
 > Let's say we create a namespace called > `debezium-demo` by running the following > command on OpenShift:
 > 
